@@ -1,3 +1,4 @@
+import { json } from 'express';
 import fetch from 'node-fetch';
 
 export interface IPokemon {
@@ -27,7 +28,26 @@ export class Pokemon {
    */
   public async getPokemonsByNameList(names: string[]): Promise<IPokemon[]> {
     // TO BE IMPLEMENTED
-    return null;
+
+    
+    var jsonstr ='';
+    var obj = JSON.parse(jsonstr);
+
+    names.forEach(async function(name){
+      if (this.checkNameValid(name)) {
+        const res = await fetch(`${this.url}/${name}`);
+        const jsonname: IResponse = await res.json();
+        obj.push(jsonname);
+      } else {
+        throw new Error('Name Invalid');
+      }
+    },
+    );
+
+    jsonstr = JSON.stringify(obj);
+    const json: IPokemon[] = jsonstr;
+
+    return json;
   }
 
   /**
